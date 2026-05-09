@@ -2,8 +2,8 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        body { margin: 0; padding: 0; overflow: hidden; background: white; }
-        canvas { display: block; }
+        body { margin: 0; background: white; overflow: hidden; }
+        canvas { display: block; background: white; }
     </style>
 </head>
 <body>
@@ -15,9 +15,17 @@
     const ctx = canvas.getContext('2d');
     let drawing = false;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    // Nastavení velikosti a vynucení bílého pozadí
+    function setup() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 
+    setup();
+
+    // Blokace pravého kliku
     window.oncontextmenu = (e) => e.preventDefault();
 
     canvas.onmousedown = (e) => {
@@ -28,21 +36,23 @@
         }
     };
 
-    canvas.onmouseup = () => drawing = false;
+    canvas.onmouseup = () => {
+        drawing = false;
+        ctx.closePath();
+    };
 
     canvas.onmousemove = (e) => {
         if (drawing) {
             ctx.lineTo(e.clientX, e.clientY);
             ctx.strokeStyle = 'black';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
             ctx.stroke();
         }
     };
 
-    window.onresize = () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    };
+    window.onresize = setup;
 </script>
 
 </body>
